@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Luxury CRM | Real Estate</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-[#090A0F] text-[#F3F4F6] antialiased selection:bg-amber-500/30">
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // 1. Lấy các hooks từ React Global (Thay vì import)
+        const { useState, useEffect, useRef } = React;
+
+        // ==========================================
+        // PASTE TOÀN BỘ MOCK DATA Ở ĐÂY
+        // (INITIAL_CUSTOMERS, INITIAL_INVENTORY...)
+        // ==========================================
+        const INITIAL_CUSTOMERS = [
+            // ... (Copy mảng dữ liệu từ code cũ sang đây) ...
+        ];
+
+        const INITIAL_INVENTORY = [
+            // ... (Copy mảng dữ liệu từ code cũ sang đây) ...
+        ];
+
+        // ==========================================
+        // COMPONENT CHÍNH
+        // ==========================================
+        // Lưu ý: Đổi "export default function App()" thành "function App()"
+        function App() {
+            
+            // ... (PASTE TOÀN BỘ LOGIC VÀ GIAO DIỆN CỦA FUNCTION APP VÀO ĐÂY) ...
+            
+            // Ví dụ dòng đầu tiên:
+            // const [activeTab, setActiveTab] = useState("dashboard");
+            
+            // Ví dụ phần return:
+            // return (
+            //    <div className="min-h-screen bg-[#090A0F]...">...</div>
+            // )
+        }
+
+        // Render ứng dụng ra màn hình
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
