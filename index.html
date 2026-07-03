@@ -23,7 +23,7 @@
         const { useState, useEffect, useRef } = React;
 
         // ==========================================
-        // MOCK DATA
+        // MOCK DATA MỞ RỘNG (CUSTOMER & INVENTORY)
         // ==========================================
         const INITIAL_CUSTOMERS = [
           {
@@ -85,6 +85,45 @@
             timeline: [
               { date: "2026-06-20 11:00", type: "Call", content: "Tư vấn chính sách vay ưu đãi 0% lãi suất trong 24 tháng", operator: "Minh Thư" }
             ]
+          },
+          // THÊM MỚI KHÁCH HÀNG
+          {
+            id: "CUST-004",
+            name: "Lê Quốc Vượng",
+            class: "Gold",
+            maskedPhone: "093***111",
+            realPhone: "0933111222",
+            maskedEmail: "v***l@techinvest.com",
+            realEmail: "vuonglq@techinvest.com",
+            avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=120",
+            architecture: "Hi-Tech / Đương Đại",
+            fengShui: "Tây Tứ Mệnh (Kim, Thủy)",
+            hobbies: ["Đầu tư công nghệ lõi", "Lái xe Tesla", "Du lịch không gian (Virgin Galactic)"],
+            netWorth: "Ước tính > 150 Tỷ VNĐ",
+            address: "Căn hộ cao cấp Metropole, Thủ Thiêm, TP. Thủ Đức",
+            notes: "Quan tâm đến giải pháp Smart Home, tiết kiệm năng lượng. Muốn chốt nhanh gọn, ít thủ tục.",
+            timeline: [
+              { date: "2026-07-01 08:00", type: "Email", content: "Gửi báo cáo phân tích tỷ suất sinh lời khu Thủ Thiêm", operator: "Minh Thư" }
+            ]
+          },
+          {
+             id: "CUST-005",
+             name: "Trần Bảo Vy",
+             class: "Diamond",
+             maskedPhone: "097***888",
+             realPhone: "0977888999",
+             maskedEmail: "v***t@fashionbrand.vn",
+             realEmail: "vytran@fashionbrand.vn",
+             avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=120",
+             architecture: "Art Deco (Nghệ thuật & Hoa lệ)",
+             fengShui: "Đông Tứ Mệnh (Mộc, Hỏa)",
+             hobbies: ["Sưu tầm trang sức kim cương", "Tham dự tuần lễ thời trang Paris", "Nghệ thuật cắm hoa Ikebana"],
+             netWorth: "Ước tính > 300 Tỷ VNĐ",
+             address: "Biệt thự Holm Residences, Thảo Điền, TP. Thủ Đức",
+             notes: "Cần không gian lớn cho Walk-in Closet (phòng thay đồ). Yêu cầu bảo mật hình ảnh tuyệt đối.",
+             timeline: [
+               { date: "2026-06-15 14:00", type: "Meeting", content: "Thưởng trà chiều và tư vấn giỏ hàng tại The Deck Sài Gòn", operator: "Gia Bảo" }
+             ]
           }
         ];
 
@@ -94,7 +133,12 @@
           { id: "DP-201", floor: "Tầng 20", name: "The River Duplex Heritage", type: "Duplex", area: "320 m2", price: 78000000000, view: "Bán đảo Thủ Thêm & Cầu Ba Son", status: "SOLD", lockExpiry: null },
           { id: "PH-402", floor: "Tầng 40", name: "Grand Marina Penthouse B", type: "Penthouse", area: "420 m2", price: 118000000000, view: "Sông Sài Gòn & Thảo Cầm Viên", status: "AVAILABLE", lockExpiry: null },
           { id: "V-103", floor: "Biệt Thự", name: "Regent Garden Villa G08", type: "Garden Villa", area: "520 m2", price: 135000000000, view: "Hồ bơi vô cực & Sân vườn nhiệt đới", status: "AVAILABLE", lockExpiry: null },
-          { id: "DP-202", floor: "Tầng 20", name: "The River Duplex Signature", type: "Duplex", area: "310 m2", price: 72000000000, view: "Nội khu hồ bơi Lagoon phong cách resort", status: "AVAILABLE", lockExpiry: null }
+          { id: "DP-202", floor: "Tầng 20", name: "The River Duplex Signature", type: "Duplex", area: "310 m2", price: 72000000000, view: "Nội khu hồ bơi Lagoon phong cách resort", status: "AVAILABLE", lockExpiry: null },
+          // THÊM MỚI GIỎ HÀNG
+          { id: "SV-3501", floor: "Tầng 35", name: "Serenity Sky Villa 35A", type: "Sky Villa", area: "280 m2", price: 95000000000, view: "Panorama Thành phố & Landmark 81", status: "AVAILABLE", lockExpiry: null },
+          { id: "SH-01", floor: "Khối Đế", name: "Boutique Shophouse Đế Vương", type: "Shophouse", area: "350 m2", price: 210000000000, view: "Mặt tiền đại lộ phố đi bộ", status: "HOLDING", lockExpiry: Date.now() + 300000 },
+          { id: "PH-450", floor: "Tầng 45", name: "Empire City Penthouse T8", type: "Penthouse", area: "600 m2", price: 250000000000, view: "360 độ Sông Sài Gòn & Trung tâm tài chính", status: "AVAILABLE", lockExpiry: null },
+          { id: "V-205", floor: "Biệt Thự", name: "Vinhomes Ba Son River Villa", type: "River Villa", area: "400 m2", price: 160000000000, view: "Bến du thuyền & Sông Sài Gòn", status: "SOLD", lockExpiry: null }
         ];
 
         function App() {
@@ -114,8 +158,8 @@
           const [unlockedContacts, setUnlockedContacts] = useState({});
           const [showIdentityVerify, setShowIdentityVerify] = useState(null);
           const [securityLogs, setSecurityLogs] = useState([
-            { timestamp: "2026-07-01 14:00:22", type: "LOGIN", agent: "Minh Thư (Elite Agent)", ip: "192.168.1.105", desc: "Đăng nhập thành công hệ thống CRM Luxury" },
-            { timestamp: "2026-07-01 14:05:40", type: "ACCESS", agent: "Minh Thư (Elite Agent)", ip: "192.168.1.105", desc: "Truy cập tệp hồ sơ VIP Bùi Cao Tiến" }
+            { timestamp: "2026-07-03 10:15:22", type: "LOGIN", agent: "Minh Thư (Elite Agent)", ip: "192.168.1.105", desc: "Đăng nhập thành công hệ thống CRM Luxury" },
+            { timestamp: "2026-07-03 10:20:40", type: "ACCESS", agent: "Minh Thư (Elite Agent)", ip: "192.168.1.105", desc: "Truy cập tệp hồ sơ VIP Bùi Cao Tiến" }
           ]);
           const [watermarkOpacity, setWatermarkOpacity] = useState(6);
           const [systemToast, setSystemToast] = useState(null);
