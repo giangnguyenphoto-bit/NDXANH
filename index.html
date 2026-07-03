@@ -14,6 +14,16 @@
     
     <div id="root"></div>
 
+    <!-- HỆ THỐNG BẮT LỖI MÀN HÌNH ĐEN -->
+    <script>
+        setTimeout(function() {
+            var root = document.getElementById('root');
+            if (!root.innerHTML.trim()) {
+                root.innerHTML = '<div style="color:#F59E0B; text-align:center; padding: 50px; font-family: monospace; line-height: 1.8; border: 1px solid #D4AF37; margin: 20px; border-radius: 10px; background: #12131C;"><h2>🚨 CẢNH BÁO BẢO MẬT: REACT KHÔNG THỂ KHỞI ĐỘNG</h2><p>Màn hình đen là do trình duyệt không thể dịch được mã lệnh React.<br/>Nguyên nhân 99% là do Copy/Paste bị thiếu ký tự ở đầu hoặc cuối file.<br/><br/>Hãy quay lại GitHub, nhấn Ctrl+A (chọn tất cả) và dán đè mã mới một lần nữa nhé!</p></div>';
+            }
+        }, 2000);
+    </script>
+
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
@@ -29,7 +39,7 @@
           {
             id: "CUST-001",
             name: "Bùi Cao Tiến",
-            class: "Diamond",
+            vipClass: "Diamond",
             maskedPhone: "091***789",
             realPhone: "0912345789",
             maskedEmail: "t***b@royalvn.com",
@@ -46,7 +56,7 @@
           {
             id: "CUST-002",
             name: "Phạm Minh Hoàng",
-            class: "Royal",
+            vipClass: "Royal",
             maskedPhone: "090***666",
             realPhone: "0909666888",
             maskedEmail: "h***m@vnluxury.com",
@@ -69,27 +79,22 @@
         ];
 
         function App() {
-          // XỬ LÝ ĐĂNG NHẬP
           const [auth, setAuth] = useState({ isAuthenticated: false, user: null });
           const [loginPhone, setLoginPhone] = useState("");
           const [loginError, setLoginError] = useState("");
 
-          // XỬ LÝ TRẠNG THÁI CRM
           const [activeTab, setActiveTab] = useState("customers");
           const [customers, setCustomers] = useState(INITIAL_CUSTOMERS);
           const [selectedCustId, setSelectedCustId] = useState(INITIAL_CUSTOMERS[0].id);
           const [inventory, setInventory] = useState(INITIAL_INVENTORY);
-          const [selectedUnit, setSelectedUnit] = useState(INITIAL_INVENTORY[0]);
           const [unlockedContacts, setUnlockedContacts] = useState({});
           
-          // XỬ LÝ FORM THÊM/SỬA KHÁCH HÀNG
           const [showCustForm, setShowCustForm] = useState(false);
           const [editingCust, setEditingCust] = useState(null);
           const [formData, setFormData] = useState({
-            name: "", realPhone: "", realEmail: "", class: "Gold", architecture: "", fengShui: "", netWorth: "", address: "", notes: "", hobbies: ""
+            name: "", realPhone: "", realEmail: "", vipClass: "Gold", architecture: "", fengShui: "", netWorth: "", address: "", notes: "", hobbies: ""
           });
 
-          // HÀM ĐĂNG NHẬP
           const handleLogin = (e) => {
             e.preventDefault();
             const foundAgent = MOCK_AGENTS.find(agent => agent.phone === loginPhone);
@@ -106,44 +111,48 @@
             setLoginPhone("");
           };
 
-          // HÀM MỞ FORM THÊM/SỬA KHÁCH HÀNG
           const openCustForm = (cust = null) => {
             if (cust) {
                 setEditingCust(cust);
                 setFormData({
-                    name: cust.name, realPhone: cust.realPhone, realEmail: cust.realEmail, class: cust.class, 
-                    architecture: cust.architecture, fengShui: cust.fengShui, netWorth: cust.netWorth, 
-                    address: cust.address, notes: cust.notes, hobbies: cust.hobbies.join(", ")
+                    name: cust.name || "", 
+                    realPhone: cust.realPhone || "", 
+                    realEmail: cust.realEmail || "", 
+                    vipClass: cust.vipClass || "Gold", 
+                    architecture: cust.architecture || "", 
+                    fengShui: cust.fengShui || "", 
+                    netWorth: cust.netWorth || "", 
+                    address: cust.address || "", 
+                    notes: cust.notes || "", 
+                    hobbies: (cust.hobbies || []).join(", ")
                 });
             } else {
                 setEditingCust(null);
                 setFormData({
-                    name: "", realPhone: "", realEmail: "", class: "Gold", architecture: "", fengShui: "", netWorth: "", address: "", notes: "", hobbies: ""
+                    name: "", realPhone: "", realEmail: "", vipClass: "Gold", architecture: "", fengShui: "", netWorth: "", address: "", notes: "", hobbies: ""
                 });
             }
             setShowCustForm(true);
           };
 
-          // HÀM LƯU KHÁCH HÀNG
           const handleSaveCustomer = (e) => {
             e.preventDefault();
             
-            // Xử lý tạo Masked Phone & Email tự động
-            const phone = formData.realPhone;
+            const phone = formData.realPhone || "";
             const maskedPhone = phone.length >= 7 ? `${phone.substring(0,3)}***${phone.substring(phone.length - 3)}` : phone;
             
-            const email = formData.realEmail;
+            const email = formData.realEmail || "";
             const emailParts = email.split("@");
             const maskedEmail = emailParts.length === 2 && emailParts[0].length > 2 
                 ? `${emailParts[0].charAt(0)}***${emailParts[0].charAt(emailParts[0].length-1)}@${emailParts[1]}` 
                 : email;
 
-            const hobbiesArray = formData.hobbies.split(",").map(h => h.trim()).filter(h => h);
+            const hobbiesArray = (formData.hobbies || "").split(",").map(h => h.trim()).filter(h => h);
 
             const newCustData = {
                 id: editingCust ? editingCust.id : `CUST-00${customers.length + 1}`,
                 name: formData.name,
-                class: formData.class,
+                vipClass: formData.vipClass,
                 realPhone: phone,
                 maskedPhone: maskedPhone,
                 realEmail: email,
@@ -155,7 +164,7 @@
                 notes: formData.notes,
                 hobbies: hobbiesArray,
                 avatar: editingCust ? editingCust.avatar : "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=120",
-                timeline: editingCust ? editingCust.timeline : [{ date: new Date().toISOString().substring(0,16).replace("T"," "), type: "System", content: `Khởi tạo hồ sơ bởi ${auth.user.name}`, operator: auth.user.name }]
+                timeline: editingCust ? editingCust.timeline : [{ date: new Date().toISOString().substring(0,16).replace("T"," "), type: "System", content: `Khởi tạo hồ sơ bởi Agent`, operator: "System" }]
             };
 
             if (editingCust) {
@@ -171,9 +180,6 @@
           const formatBillion = (number) => (number / 1000000000).toFixed(1) + " Tỷ";
           const activeCustomer = customers.find(c => c.id === selectedCustId) || customers[0];
 
-          // ==========================================
-          // MÀN HÌNH ĐĂNG NHẬP (NẾU CHƯA AUTH)
-          // ==========================================
           if (!auth.isAuthenticated) {
             return (
               <div className="min-h-screen bg-[#090A0F] flex items-center justify-center p-4 relative overflow-hidden">
@@ -220,13 +226,9 @@
             );
           }
 
-          // ==========================================
-          // MÀN HÌNH CRM CHÍNH
-          // ==========================================
           return (
             <div className="min-h-screen bg-[#090A0F] text-[#F3F4F6] font-sans flex flex-col md:flex-row">
                 
-                {/* SIDEBAR */}
                 <aside className="hidden md:flex flex-col w-64 bg-[#12131C] border-r border-white/10 p-6 space-y-8 flex-shrink-0">
                     <div className="flex items-center space-x-3">
                         <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-amber-600 to-amber-300 flex items-center justify-center">
@@ -256,14 +258,11 @@
                     <button onClick={handleLogout} className="text-xs text-red-400 hover:text-red-300 font-mono text-left border-t border-white/10 pt-4">⎋ Đăng Xuất An Toàn</button>
                 </aside>
 
-                {/* CONTENT AREA */}
                 <main className="flex-1 p-4 md:p-6 overflow-y-auto">
                     
-                    {/* KHU VỰC KHÁCH HÀNG 360 */}
                     {activeTab === "customers" && (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             
-                            {/* Cột Danh Sách */}
                             <div className="col-span-1 bg-[#12131C] rounded-xl border border-white/10 p-4 space-y-4">
                                 <div className="flex justify-between items-center mb-4">
                                     <h3 className="text-sm font-bold tracking-widest text-amber-400">TỆP KHÁCH VIP</h3>
@@ -279,7 +278,7 @@
                                                 <img src={cust.avatar} alt={cust.name} className="h-10 w-10 rounded-full border border-amber-400/50 object-cover" />
                                                 <div>
                                                     <h4 className="text-xs font-bold text-zinc-100">{cust.name}</h4>
-                                                    <p className="text-[9px] text-zinc-400 mt-0.5">{cust.class}</p>
+                                                    <p className="text-[9px] text-zinc-400 mt-0.5">{cust.vipClass}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -287,14 +286,13 @@
                                 </div>
                             </div>
 
-                            {/* Cột Chi Tiết Khách Hàng */}
                             <div className="col-span-1 lg:col-span-2 bg-[#12131C] rounded-xl border border-white/10 p-6">
                                 {activeCustomer && (
                                     <div className="space-y-6">
                                         <div className="flex justify-between items-start border-b border-white/10 pb-4">
                                             <div>
                                                 <h3 className="text-xl font-bold text-zinc-100 uppercase">{activeCustomer.name}</h3>
-                                                <p className="text-xs text-amber-400 font-mono mt-1">Hạng: {activeCustomer.class} | ID: {activeCustomer.id}</p>
+                                                <p className="text-xs text-amber-400 font-mono mt-1">Hạng: {activeCustomer.vipClass} | ID: {activeCustomer.id}</p>
                                             </div>
                                             <button onClick={() => openCustForm(activeCustomer)} className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-zinc-300 transition-all">
                                                 ✏️ Chỉnh Sửa Hồ Sơ
@@ -337,7 +335,7 @@
                                             <div className="md:col-span-3">
                                                 <h4 className="text-[10px] font-bold text-amber-400 uppercase">Sở Thích</h4>
                                                 <div className="flex gap-2 mt-2 flex-wrap">
-                                                    {activeCustomer.hobbies.map((hb, i) => (
+                                                    {(activeCustomer.hobbies || []).map((hb, i) => (
                                                         <span key={i} className="px-2.5 py-1 text-[10px] rounded bg-white/5 border border-white/10 text-zinc-300">{hb}</span>
                                                     ))}
                                                 </div>
@@ -354,7 +352,6 @@
                         </div>
                     )}
 
-                    {/* KHU VỰC SA BÀN (RÚT GỌN ĐỂ DEMO) */}
                     {activeTab === "inventory" && (
                         <div className="bg-[#12131C] rounded-xl border border-white/10 p-6 space-y-4">
                             <h3 className="text-sm font-bold tracking-widest text-amber-400 mb-4">SA BÀN SỐ & GIỎ HÀNG 3D</h3>
@@ -377,7 +374,6 @@
                     )}
                 </main>
                 
-                {/* MODAL FORM THÊM/SỬA KHÁCH HÀNG */}
                 {showCustForm && (
                     <div className="fixed inset-0 z-50 bg-[#000000]/80 backdrop-blur-md flex items-center justify-center p-4">
                         <div className="bg-[#12131C] border border-amber-500/40 max-w-2xl w-full rounded-2xl p-6 shadow-2xl relative overflow-y-auto max-h-[90vh]">
@@ -394,11 +390,11 @@
                                     </div>
                                     <div>
                                         <label className="text-[10px] text-zinc-400 uppercase font-bold block mb-1">Phân Hạng VIP</label>
-                                        <select value={formData.class} onChange={e => setFormData({...formData, class: e.target.value})} className="w-full p-2.5 rounded bg-zinc-900 border border-white/10 text-sm text-white focus:border-amber-500">
-                                            <option value="Gold">Gold (> 50 Tỷ)</option>
-                                            <option value="Platinum">Platinum (> 100 Tỷ)</option>
-                                            <option value="Diamond">Diamond (> 500 Tỷ)</option>
-                                            <option value="Royal">Royal (> 1000 Tỷ)</option>
+                                        <select value={formData.vipClass} onChange={e => setFormData({...formData, vipClass: e.target.value})} className="w-full p-2.5 rounded bg-zinc-900 border border-white/10 text-sm text-white focus:border-amber-500">
+                                            <option value="Gold">Gold (Trên 50 Tỷ)</option>
+                                            <option value="Platinum">Platinum (Trên 100 Tỷ)</option>
+                                            <option value="Diamond">Diamond (Trên 500 Tỷ)</option>
+                                            <option value="Royal">Royal (Trên 1000 Tỷ)</option>
                                         </select>
                                     </div>
                                     <div>
