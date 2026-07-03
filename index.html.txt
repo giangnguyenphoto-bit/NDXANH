@@ -4,52 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIP Luxury CRM | Real Estate</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="bg-[#090A0F] text-[#F3F4F6] antialiased selection:bg-amber-500/30">
-    
     <div id="root"></div>
 
     <script type="text/babel">
-        // 1. Lấy các hooks từ React Global (Thay vì import)
         const { useState, useEffect, useRef } = React;
 
-        // ==========================================
-        // PASTE TOÀN BỘ MOCK DATA Ở ĐÂY
-        // (INITIAL_CUSTOMERS, INITIAL_INVENTORY...)
-        // ==========================================
         const INITIAL_CUSTOMERS = [
-            // ... (Copy mảng dữ liệu từ code cũ sang đây) ...
+          {
+            id: "CUST-001",
+            name: "Bùi Cao Tiến",
+            class: "Diamond",
+            maskedPhone: "091***789",
+            realPhone: "0912345789",
+            maskedEmail: "t***b@royalvn.com",
+            realEmail: "tiencb@royalvn.com",
+            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
+            architecture: "Indochine (Đông Dương cổ điển)",
+            fengShui: "Đông Tứ Mệnh (Hợp hướng Đông, Nam, Đông Nam, Bắc)",
+            hobbies: ["Chơi Golf PGA", "Du thuyền Yacht Club", "Sưu tầm đồng hồ Audemars Piguet"],
+            netWorth: "Ước tính > 500 Tỷ VNĐ",
+            address: "Penthouse Cove Residences, Empire City, TP. Thủ Đức",
+            notes: "Ưu tiên căn có bến đỗ du thuyền trực diện sông Sài Gòn. Thích màu xanh lam sâu.",
+            timeline: [
+              { date: "2026-06-28 09:30", type: "Call", content: "Agent Minh Thư gọi điện tư vấn giỏ hàng Penthouse Grand Marina", operator: "Minh Thư" },
+              { date: "2026-06-29 14:00", type: "Site-Visit", content: "Tham quan thực tế bằng du thuyền riêng của chủ đầu tư", operator: "Minh Thư" },
+              { date: "2026-06-30 18:00", type: "Event", content: "Check-in Tiệc rượu tối VIP - Khách sạn Park Hyatt", operator: "Hệ thống" }
+            ]
+          },
+          {
+            id: "CUST-002",
+            name: "Phạm Minh Hoàng",
+            class: "Royal",
+            maskedPhone: "090***666",
+            realPhone: "0909666888",
+            maskedEmail: "h***m@vnluxury.com",
+            realEmail: "hoangpm@vnluxury.com",
+            avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120",
+            architecture: "Minimalism (Tối giản thượng lưu)",
+            fengShui: "Tây Tứ Mệnh (Hợp hướng Tây, Tây Bắc, Tây Nam, Đông Bắc)",
+            hobbies: ["Sưu tầm rượu vang Chateau Margaux", "Lái xe cổ Maybach", "Đầu tư nghệ thuật đương đại"],
+            netWorth: "Ước tính > 1.200 Tỷ VNĐ",
+            address: "Biệt thự trục chính Chateau, Phú Mỹ Hưng, Quận 7",
+            notes: "Yêu cầu phòng hầm rượu riêng biệt rộng tối thiểu 50m2. Thiết kế an ninh 3 lớp bảo mật.",
+            timeline: [
+              { date: "2026-06-25 10:15", type: "Zalo/Viber", content: "Gửi sơ đồ mặt bằng trục Biệt thự mặt biển Regent Phú Quốc", operator: "Quốc Huy" },
+              { date: "2026-06-27 15:30", type: "Meeting", content: "Gặp mặt trực tiếp tại Lounge văn phòng Private Banking", operator: "Quốc Huy" }
+            ]
+          }
         ];
 
         const INITIAL_INVENTORY = [
-            // ... (Copy mảng dữ liệu từ code cũ sang đây) ...
+          { id: "PH-401", floor: "Tầng 40", name: "Grand Marina Penthouse A", type: "Penthouse", area: "450 m2", price: 125000000000, view: "Trực diện Sông Sài Gòn & Quận 1", status: "AVAILABLE", lockExpiry: null },
+          { id: "V-102", floor: "Biệt Thự", name: "Regent Beachfront Villa V05", type: "Beach Villa", area: "680 m2", price: 185000000000, view: "Trực diện hoàng hôn Biển Bãi Trường", status: "HOLDING", lockExpiry: Date.now() + 645000 }
         ];
 
-        // ==========================================
-        // COMPONENT CHÍNH
-        // ==========================================
-        // Lưu ý: Đổi "export default function App()" thành "function App()"
         function App() {
-            
-            // ... (PASTE TOÀN BỘ LOGIC VÀ GIAO DIỆN CỦA FUNCTION APP VÀO ĐÂY) ...
-            
-            // Ví dụ dòng đầu tiên:
-            // const [activeTab, setActiveTab] = useState("dashboard");
-            
-            // Ví dụ phần return:
-            // return (
-            //    <div className="min-h-screen bg-[#090A0F]...">...</div>
-            // )
+          const [activeTab, setActiveTab] = useState("dashboard");
+          const [activeDashTab, setActiveDashTab] = useState("ceo");
+          const [customers, setCustomers] = useState(INITIAL_CUSTOMERS);
+          const [selectedCustId, setSelectedCustId] = useState("CUST-001");
+          const [inventory, setInventory] = useState(INITIAL_INVENTORY);
+          const [selectedUnit, setSelectedUnit] = useState(INITIAL_INVENTORY[0]);
+
+          const activeCustomer = customers.find(c => c.id === selectedCustId) || customers[0];
+
+          return (
+            <div className="min-h-screen p-6 text-center space-y-6">
+                <h1 className="text-3xl font-bold text-amber-500 mt-10">🚀 CRM ĐÃ RENDER THÀNH CÔNG!</h1>
+                <p className="text-zinc-400">Bạn đã ghép code chính xác. Bây giờ hãy copy phần <b>return (...)</b> dài từ file JSX gốc đè vào vị trí này để hiển thị toàn bộ giao diện CRM nhé.</p>
+                <div className="p-4 bg-white/5 border border-white/10 rounded-xl inline-block text-left">
+                    <p className="text-amber-400 font-mono text-sm">Customer Đang Chọn: {activeCustomer.name}</p>
+                    <p className="text-amber-400 font-mono text-sm">Căn Hộ Đang Chọn: {selectedUnit.name}</p>
+                </div>
+            </div>
+          );
         }
 
-        // Render ứng dụng ra màn hình
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
